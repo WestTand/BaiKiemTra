@@ -7,16 +7,79 @@ const StudentList = () => {
     { ten: "Lê Văn C", lop: "10C3", tuoi: 16 }
   ]);
 
+  const [form, setForm] = useState({ ten: '', lop: '', tuoi: '' });
+
   const handleDelete = (index) => {
     const newStudents = [...students];
     newStudents.splice(index, 1);
     setStudents(newStudents);
   };
 
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setForm({ ...form, [name]: value });
+  };
+
+  const handleAdd = () => {
+    if (form.ten && form.lop && form.tuoi) {
+      setStudents([...students, { ...form, tuoi: parseInt(form.tuoi) }]);
+      setForm({ ten: '', lop: '', tuoi: '' }); // reset form
+    } else {
+      alert('Vui lòng điền đầy đủ thông tin!');
+    }
+  };
+
   return (
-    <div className="max-w-3xl mx-auto mt-10 p-4 bg-white shadow-md rounded-xl">
-      <h2 className="text-2xl font-bold text-center mb-6">Danh sách sinh viên</h2>
-      <table className="w-full table-auto border border-gray-300">
+    <div className="max-w-3xl mx-auto mt-10 p-6 bg-white shadow-md rounded-xl space-y-6">
+      <h2 className="text-2xl font-bold text-center">Danh sách sinh viên</h2>
+
+      {/* Form thêm sinh viên */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
+        <div>
+          <label className="block mb-1 font-medium">Họ tên</label>
+          <input
+            type="text"
+            name="ten"
+            value={form.ten}
+            onChange={handleChange}
+            className="w-full border border-gray-300 rounded px-3 py-2"
+            placeholder="Nhập họ tên"
+          />
+        </div>
+        <div>
+          <label className="block mb-1 font-medium">Lớp</label>
+          <input
+            type="text"
+            name="lop"
+            value={form.lop}
+            onChange={handleChange}
+            className="w-full border border-gray-300 rounded px-3 py-2"
+            placeholder="Nhập lớp"
+          />
+        </div>
+        <div>
+          <label className="block mb-1 font-medium">Tuổi</label>
+          <input
+            type="number"
+            name="tuoi"
+            value={form.tuoi}
+            onChange={handleChange}
+            className="w-full border border-gray-300 rounded px-3 py-2"
+            placeholder="Nhập tuổi"
+          />
+        </div>
+        <div>
+          <button
+            onClick={handleAdd}
+            className="w-full bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
+          >
+            Thêm sinh viên
+          </button>
+        </div>
+      </div>
+
+      {/* Bảng sinh viên */}
+      <table className="w-full table-auto border border-gray-300 mt-4">
         <thead className="bg-gray-100">
           <tr>
             <th className="border px-4 py-2">Tên</th>
