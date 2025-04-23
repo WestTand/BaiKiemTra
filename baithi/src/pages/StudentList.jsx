@@ -1,12 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 const StudentList = () => {
-  const [students, setStudents] = useState([
-    { id: 1, ten: "Nguyễn Văn A", lop: "12A1", tuoi: 18 },
-    { id: 2, ten: "Trần Thị B", lop: "11B2", tuoi: 17 },
-    { id: 3, ten: "Lê Văn C", lop: "10C3", tuoi: 16 },
-    { id: 4, ten: "Phạm Thị D", lop: "12A1", tuoi: 18 },
-  ]);
+  const [students, setStudents] = useState(() => {
+    const saved = localStorage.getItem('students');
+    return saved ? JSON.parse(saved) : [
+      { id: 1, ten: "Nguyễn Văn A", lop: "12A1", tuoi: 18 },
+      { id: 2, ten: "Trần Thị B", lop: "11B2", tuoi: 17 },
+      { id: 3, ten: "Lê Văn C", lop: "10C3", tuoi: 16 }
+    ];
+  });
 
   const [form, setForm] = useState({ ten: '', lop: '', tuoi: '' });
   const [editingId, setEditingId] = useState(null);
@@ -50,13 +52,25 @@ const StudentList = () => {
     setForm({ ten: '', lop: '', tuoi: '' });
   };
 
-  // Lọc danh sách theo tên và lớp
+  const resetStudents = () => {
+    const defaultStudents = [
+      { id: 1, ten: "Nguyễn Văn A", lop: "12A1", tuoi: 18 },
+      { id: 2, ten: "Trần Thị B", lop: "11B2", tuoi: 17 },
+      { id: 3, ten: "Lê Văn C", lop: "10C3", tuoi: 16 }
+    ];
+    setStudents(defaultStudents);
+  };
+
+  useEffect(() => {
+    localStorage.setItem('students', JSON.stringify(students));
+  }, [students]);
+
+  // Lọc sinh viên theo tên và lớp
   const filteredStudents = students.filter((sv) =>
     sv.ten.toLowerCase().includes(searchQuery.toLowerCase()) &&
     (selectedClass === '' || sv.lop === selectedClass)
   );
 
-  // Lấy danh sách lớp duy nhất
   const classOptions = [...new Set(students.map((sv) => sv.lop))];
 
   return (
@@ -127,6 +141,16 @@ const StudentList = () => {
             Thêm sinh viên
           </button>
         </div>
+      </div>
+
+      {/* Nút reset danh sách */}
+      <div className="mt-4">
+        <button
+          onClick={resetStudents}
+          className="w-full bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition"
+        >
+          Reset danh sách
+        </button>
       </div>
 
       {/* Bảng sinh viên */}
@@ -209,11 +233,9 @@ const StudentList = () => {
               )}
             </tr>
           ))}
-          {filteredStudents.length === 0 && (
+          {!filteredStudents.length && (
             <tr>
-              <td colSpan="4" className="text-center py-4 text-gray-500">
-                Không có sinh viên nào phù hợp.
-              </td>
+              <td colSpan="4" className="text-center py-4">Không có sinh viên nào</td>
             </tr>
           )}
         </tbody>
