@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import StudentItem from '../components/StudentItem';
 
 const StudentList = () => {
   const [students, setStudents] = useState(() => {
@@ -164,74 +165,18 @@ const StudentList = () => {
           </tr>
         </thead>
         <tbody>
-          {filteredStudents.map((sv) => (
-            <tr key={sv.id} className="text-center">
-              {editingId === sv.id ? (
-                <>
-                  <td className="border px-4 py-2">
-                    <input
-                      type="text"
-                      name="ten"
-                      value={form.ten}
-                      onChange={handleChange}
-                      className="w-full border border-gray-300 rounded px-2 py-1"
-                    />
-                  </td>
-                  <td className="border px-4 py-2">
-                    <input
-                      type="text"
-                      name="lop"
-                      value={form.lop}
-                      onChange={handleChange}
-                      className="w-full border border-gray-300 rounded px-2 py-1"
-                    />
-                  </td>
-                  <td className="border px-4 py-2">
-                    <input
-                      type="number"
-                      name="tuoi"
-                      value={form.tuoi}
-                      onChange={handleChange}
-                      className="w-full border border-gray-300 rounded px-2 py-1"
-                    />
-                  </td>
-                  <td className="border px-4 py-2 space-x-2">
-                    <button
-                      onClick={() => handleSave(sv.id)}
-                      className="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600"
-                    >
-                      Lưu
-                    </button>
-                    <button
-                      onClick={() => setEditingId(null)}
-                      className="bg-gray-400 text-white px-3 py-1 rounded hover:bg-gray-500"
-                    >
-                      Huỷ
-                    </button>
-                  </td>
-                </>
-              ) : (
-                <>
-                  <td className="border px-4 py-2">{sv.ten}</td>
-                  <td className="border px-4 py-2">{sv.lop}</td>
-                  <td className="border px-4 py-2">{sv.tuoi}</td>
-                  <td className="border px-4 py-2 space-x-2">
-                    <button
-                      onClick={() => startEditing(sv)}
-                      className="bg-yellow-400 text-white px-3 py-1 rounded hover:bg-yellow-500"
-                    >
-                      Sửa
-                    </button>
-                    <button
-                      onClick={() => handleDelete(sv.id)}
-                      className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
-                    >
-                      Xoá
-                    </button>
-                  </td>
-                </>
-              )}
-            </tr>
+          {filteredStudents.map((student) => (
+            <StudentItem
+              key={student.id}
+              student={student}
+              onDelete={handleDelete}
+              onEditStart={startEditing}
+              onSave={handleSave}
+              isEditing={editingId === student.id}
+              form={form}
+              onChange={handleChange}
+              onCancel={() => setEditingId(null)}
+            />
           ))}
           {!filteredStudents.length && (
             <tr>
