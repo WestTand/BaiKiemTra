@@ -9,6 +9,7 @@ const StudentList = () => {
 
   const [form, setForm] = useState({ ten: '', lop: '', tuoi: '' });
   const [editingId, setEditingId] = useState(null);
+  const [searchQuery, setSearchQuery] = useState('');
 
   const handleDelete = (id) => {
     setStudents(students.filter((sv) => sv.id !== id));
@@ -47,9 +48,24 @@ const StudentList = () => {
     setForm({ ten: '', lop: '', tuoi: '' });
   };
 
+  const filteredStudents = students.filter(sv =>
+    sv.ten.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
     <div className="max-w-4xl mx-auto mt-10 p-6 bg-white shadow-md rounded-xl space-y-6">
       <h2 className="text-2xl font-bold text-center">Danh sách sinh viên</h2>
+
+      {/* Tìm kiếm */}
+      <div className="flex justify-end">
+        <input
+          type="text"
+          placeholder="Tìm theo tên..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="border border-gray-300 rounded px-4 py-2 mb-4 w-1/2"
+        />
+      </div>
 
       {/* Form thêm sinh viên */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
@@ -107,7 +123,7 @@ const StudentList = () => {
           </tr>
         </thead>
         <tbody>
-          {students.map((sv) => (
+          {filteredStudents.map((sv) => (
             <tr key={sv.id} className="text-center">
               {editingId === sv.id ? (
                 <>
@@ -176,10 +192,10 @@ const StudentList = () => {
               )}
             </tr>
           ))}
-          {students.length === 0 && (
+          {filteredStudents.length === 0 && (
             <tr>
               <td colSpan="4" className="text-center py-4 text-gray-500">
-                Không có sinh viên nào.
+                Không có sinh viên nào phù hợp.
               </td>
             </tr>
           )}
