@@ -2,17 +2,15 @@ import React, { useState } from 'react';
 
 const StudentList = () => {
   const [students, setStudents] = useState([
-    { ten: "Nguyễn Văn A", lop: "12A1", tuoi: 18 },
-    { ten: "Trần Thị B", lop: "11B2", tuoi: 17 },
-    { ten: "Lê Văn C", lop: "10C3", tuoi: 16 }
+    { id: 1, ten: "Nguyễn Văn A", lop: "12A1", tuoi: 18 },
+    { id: 2, ten: "Trần Thị B", lop: "11B2", tuoi: 17 },
+    { id: 3, ten: "Lê Văn C", lop: "10C3", tuoi: 16 }
   ]);
 
   const [form, setForm] = useState({ ten: '', lop: '', tuoi: '' });
 
-  const handleDelete = (index) => {
-    const newStudents = [...students];
-    newStudents.splice(index, 1);
-    setStudents(newStudents);
+  const handleDelete = (id) => {
+    setStudents(students.filter((sv) => sv.id !== id));
   };
 
   const handleChange = (e) => {
@@ -22,7 +20,13 @@ const StudentList = () => {
 
   const handleAdd = () => {
     if (form.ten && form.lop && form.tuoi) {
-      setStudents([...students, { ...form, tuoi: parseInt(form.tuoi) }]);
+      const newStudent = {
+        id: Date.now(), // tạo id duy nhất
+        ten: form.ten,
+        lop: form.lop,
+        tuoi: parseInt(form.tuoi)
+      };
+      setStudents([...students, newStudent]);
       setForm({ ten: '', lop: '', tuoi: '' }); // reset form
     } else {
       alert('Vui lòng điền đầy đủ thông tin!');
@@ -89,14 +93,14 @@ const StudentList = () => {
           </tr>
         </thead>
         <tbody>
-          {students.map((sv, index) => (
-            <tr key={index} className="text-center">
+          {students.map((sv) => (
+            <tr key={sv.id} className="text-center">
               <td className="border px-4 py-2">{sv.ten}</td>
               <td className="border px-4 py-2">{sv.lop}</td>
               <td className="border px-4 py-2">{sv.tuoi}</td>
               <td className="border px-4 py-2">
                 <button
-                  onClick={() => handleDelete(index)}
+                  onClick={() => handleDelete(sv.id)}
                   className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 transition"
                 >
                   Xoá
