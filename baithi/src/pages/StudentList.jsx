@@ -4,12 +4,14 @@ const StudentList = () => {
   const [students, setStudents] = useState([
     { id: 1, ten: "Nguyễn Văn A", lop: "12A1", tuoi: 18 },
     { id: 2, ten: "Trần Thị B", lop: "11B2", tuoi: 17 },
-    { id: 3, ten: "Lê Văn C", lop: "10C3", tuoi: 16 }
+    { id: 3, ten: "Lê Văn C", lop: "10C3", tuoi: 16 },
+    { id: 4, ten: "Phạm Thị D", lop: "12A1", tuoi: 18 },
   ]);
 
   const [form, setForm] = useState({ ten: '', lop: '', tuoi: '' });
   const [editingId, setEditingId] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
+  const [selectedClass, setSelectedClass] = useState('');
 
   const handleDelete = (id) => {
     setStudents(students.filter((sv) => sv.id !== id));
@@ -48,27 +50,42 @@ const StudentList = () => {
     setForm({ ten: '', lop: '', tuoi: '' });
   };
 
-  const filteredStudents = students.filter(sv =>
-    sv.ten.toLowerCase().includes(searchQuery.toLowerCase())
+  // Lọc danh sách theo tên và lớp
+  const filteredStudents = students.filter((sv) =>
+    sv.ten.toLowerCase().includes(searchQuery.toLowerCase()) &&
+    (selectedClass === '' || sv.lop === selectedClass)
   );
+
+  // Lấy danh sách lớp duy nhất
+  const classOptions = [...new Set(students.map((sv) => sv.lop))];
 
   return (
     <div className="max-w-4xl mx-auto mt-10 p-6 bg-white shadow-md rounded-xl space-y-6">
       <h2 className="text-2xl font-bold text-center">Danh sách sinh viên</h2>
 
-      {/* Tìm kiếm */}
-      <div className="flex justify-end">
+      {/* Tìm kiếm và lọc lớp */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <input
           type="text"
           placeholder="Tìm theo tên..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="border border-gray-300 rounded px-4 py-2 mb-4 w-1/2"
+          className="border border-gray-300 rounded px-4 py-2 w-full md:w-1/2"
         />
+        <select
+          value={selectedClass}
+          onChange={(e) => setSelectedClass(e.target.value)}
+          className="border border-gray-300 rounded px-4 py-2 w-full md:w-1/3"
+        >
+          <option value="">Tất cả lớp</option>
+          {classOptions.map((lop) => (
+            <option key={lop} value={lop}>{lop}</option>
+          ))}
+        </select>
       </div>
 
       {/* Form thêm sinh viên */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 items-end mt-4">
         <div>
           <label className="block mb-1 font-medium">Họ tên</label>
           <input
