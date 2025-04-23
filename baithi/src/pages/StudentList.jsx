@@ -8,6 +8,7 @@ const StudentList = () => {
   ]);
 
   const [form, setForm] = useState({ ten: '', lop: '', tuoi: '' });
+  const [editingId, setEditingId] = useState(null);
 
   const handleDelete = (id) => {
     setStudents(students.filter((sv) => sv.id !== id));
@@ -21,20 +22,33 @@ const StudentList = () => {
   const handleAdd = () => {
     if (form.ten && form.lop && form.tuoi) {
       const newStudent = {
-        id: Date.now(), // tạo id duy nhất
+        id: Date.now(),
         ten: form.ten,
         lop: form.lop,
         tuoi: parseInt(form.tuoi)
       };
       setStudents([...students, newStudent]);
-      setForm({ ten: '', lop: '', tuoi: '' }); // reset form
+      setForm({ ten: '', lop: '', tuoi: '' });
     } else {
       alert('Vui lòng điền đầy đủ thông tin!');
     }
   };
 
+  const startEditing = (student) => {
+    setEditingId(student.id);
+    setForm({ ten: student.ten, lop: student.lop, tuoi: student.tuoi });
+  };
+
+  const handleSave = (id) => {
+    setStudents(students.map(sv =>
+      sv.id === id ? { ...sv, ten: form.ten, lop: form.lop, tuoi: parseInt(form.tuoi) } : sv
+    ));
+    setEditingId(null);
+    setForm({ ten: '', lop: '', tuoi: '' });
+  };
+
   return (
-    <div className="max-w-3xl mx-auto mt-10 p-6 bg-white shadow-md rounded-xl space-y-6">
+    <div className="max-w-4xl mx-auto mt-10 p-6 bg-white shadow-md rounded-xl space-y-6">
       <h2 className="text-2xl font-bold text-center">Danh sách sinh viên</h2>
 
       {/* Form thêm sinh viên */}
@@ -95,17 +109,71 @@ const StudentList = () => {
         <tbody>
           {students.map((sv) => (
             <tr key={sv.id} className="text-center">
-              <td className="border px-4 py-2">{sv.ten}</td>
-              <td className="border px-4 py-2">{sv.lop}</td>
-              <td className="border px-4 py-2">{sv.tuoi}</td>
-              <td className="border px-4 py-2">
-                <button
-                  onClick={() => handleDelete(sv.id)}
-                  className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 transition"
-                >
-                  Xoá
-                </button>
-              </td>
+              {editingId === sv.id ? (
+                <>
+                  <td className="border px-4 py-2">
+                    <input
+                      type="text"
+                      name="ten"
+                      value={form.ten}
+                      onChange={handleChange}
+                      className="w-full border border-gray-300 rounded px-2 py-1"
+                    />
+                  </td>
+                  <td className="border px-4 py-2">
+                    <input
+                      type="text"
+                      name="lop"
+                      value={form.lop}
+                      onChange={handleChange}
+                      className="w-full border border-gray-300 rounded px-2 py-1"
+                    />
+                  </td>
+                  <td className="border px-4 py-2">
+                    <input
+                      type="number"
+                      name="tuoi"
+                      value={form.tuoi}
+                      onChange={handleChange}
+                      className="w-full border border-gray-300 rounded px-2 py-1"
+                    />
+                  </td>
+                  <td className="border px-4 py-2 space-x-2">
+                    <button
+                      onClick={() => handleSave(sv.id)}
+                      className="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600"
+                    >
+                      Lưu
+                    </button>
+                    <button
+                      onClick={() => setEditingId(null)}
+                      className="bg-gray-400 text-white px-3 py-1 rounded hover:bg-gray-500"
+                    >
+                      Huỷ
+                    </button>
+                  </td>
+                </>
+              ) : (
+                <>
+                  <td className="border px-4 py-2">{sv.ten}</td>
+                  <td className="border px-4 py-2">{sv.lop}</td>
+                  <td className="border px-4 py-2">{sv.tuoi}</td>
+                  <td className="border px-4 py-2 space-x-2">
+                    <button
+                      onClick={() => startEditing(sv)}
+                      className="bg-yellow-400 text-white px-3 py-1 rounded hover:bg-yellow-500"
+                    >
+                      Sửa
+                    </button>
+                    <button
+                      onClick={() => handleDelete(sv.id)}
+                      className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
+                    >
+                      Xoá
+                    </button>
+                  </td>
+                </>
+              )}
             </tr>
           ))}
           {students.length === 0 && (
