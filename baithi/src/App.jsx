@@ -1,9 +1,11 @@
+import StudentList from "./pages/StudentList"
+
 function App() {
 
 
   return (
     <>
-      <h1>Baithi</h1>
+      <StudentList/>
     </>
   )
 }
