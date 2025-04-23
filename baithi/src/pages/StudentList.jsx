@@ -66,7 +66,6 @@ const StudentList = () => {
     localStorage.setItem('students', JSON.stringify(students));
   }, [students]);
 
-  // Lọc sinh viên theo tên và lớp
   const filteredStudents = students.filter((sv) =>
     sv.ten.toLowerCase().includes(searchQuery.toLowerCase()) &&
     (selectedClass === '' || sv.lop === selectedClass)
@@ -75,22 +74,22 @@ const StudentList = () => {
   const classOptions = [...new Set(students.map((sv) => sv.lop))];
 
   return (
-    <div className="max-w-4xl mx-auto mt-10 p-6 bg-white shadow-md rounded-xl space-y-6">
-      <h2 className="text-2xl font-bold text-center">Danh sách sinh viên</h2>
+    <div className="max-w-5xl mx-auto mt-10 p-6 bg-white shadow-lg rounded-lg space-y-6">
+      <h2 className="text-3xl font-bold text-center text-gray-800">Danh sách sinh viên</h2>
 
       {/* Tìm kiếm và lọc lớp */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
         <input
           type="text"
-          placeholder="Tìm theo tên..."
+          placeholder="Tìm kiếm theo tên..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="border border-gray-300 rounded px-4 py-2 w-full md:w-1/2"
+          className="border border-gray-300 rounded-lg px-4 py-2 w-full md:w-1/2 shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
         <select
           value={selectedClass}
           onChange={(e) => setSelectedClass(e.target.value)}
-          className="border border-gray-300 rounded px-4 py-2 w-full md:w-1/3"
+          className="border border-gray-300 rounded-lg px-4 py-2 w-full md:w-1/3 shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500"
         >
           <option value="">Tất cả lớp</option>
           {classOptions.map((lop) => (
@@ -100,44 +99,44 @@ const StudentList = () => {
       </div>
 
       {/* Form thêm sinh viên */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 items-end mt-4">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mt-6">
         <div>
-          <label className="block mb-1 font-medium">Họ tên</label>
+          <label className="block mb-2 font-medium text-gray-700">Họ tên</label>
           <input
             type="text"
             name="ten"
             value={form.ten}
             onChange={handleChange}
-            className="w-full border border-gray-300 rounded px-3 py-2"
+            className="w-full border border-gray-300 rounded-lg px-4 py-2 shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             placeholder="Nhập họ tên"
           />
         </div>
         <div>
-          <label className="block mb-1 font-medium">Lớp</label>
+          <label className="block mb-2 font-medium text-gray-700">Lớp</label>
           <input
             type="text"
             name="lop"
             value={form.lop}
             onChange={handleChange}
-            className="w-full border border-gray-300 rounded px-3 py-2"
+            className="w-full border border-gray-300 rounded-lg px-4 py-2 shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             placeholder="Nhập lớp"
           />
         </div>
         <div>
-          <label className="block mb-1 font-medium">Tuổi</label>
+          <label className="block mb-2 font-medium text-gray-700">Tuổi</label>
           <input
             type="number"
             name="tuoi"
             value={form.tuoi}
             onChange={handleChange}
-            className="w-full border border-gray-300 rounded px-3 py-2"
+            className="w-full border border-gray-300 rounded-lg px-4 py-2 shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             placeholder="Nhập tuổi"
           />
         </div>
-        <div>
+        <div className="flex items-end gap-4">
           <button
             onClick={handleAdd}
-            className="w-full bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
+            className="w-full bg-blue-600 text-white px-6 py-3 rounded-lg shadow-lg hover:bg-blue-700 transition"
           >
             Thêm sinh viên
           </button>
@@ -145,23 +144,23 @@ const StudentList = () => {
       </div>
 
       {/* Nút reset danh sách */}
-      <div className="mt-4">
+      <div className="mt-6">
         <button
           onClick={resetStudents}
-          className="w-full bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition"
+          className="w-full bg-red-500 text-white px-6 py-3 rounded-lg shadow-lg hover:bg-red-600 transition"
         >
           Reset danh sách
         </button>
       </div>
 
       {/* Bảng sinh viên */}
-      <table className="w-full table-auto border border-gray-300 mt-4">
+      <table className="w-full table-auto border border-gray-300 mt-6 rounded-lg overflow-hidden">
         <thead className="bg-gray-100">
           <tr>
-            <th className="border px-4 py-2">Tên</th>
-            <th className="border px-4 py-2">Lớp</th>
-            <th className="border px-4 py-2">Tuổi</th>
-            <th className="border px-4 py-2">Hành động</th>
+            <th className="border px-6 py-3 text-left text-gray-600">Tên</th>
+            <th className="border px-6 py-3 text-left text-gray-600">Lớp</th>
+            <th className="border px-6 py-3 text-left text-gray-600">Tuổi</th>
+            <th className="border px-6 py-3 text-left text-gray-600">Hành động</th>
           </tr>
         </thead>
         <tbody>
@@ -180,7 +179,7 @@ const StudentList = () => {
           ))}
           {!filteredStudents.length && (
             <tr>
-              <td colSpan="4" className="text-center py-4">Không có sinh viên nào</td>
+              <td colSpan="4" className="text-center py-4 text-gray-500">Không có sinh viên nào</td>
             </tr>
           )}
         </tbody>
